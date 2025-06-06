@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Travel Blog</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- AOS Animation Library -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    crossorigin="anonymous"
+  />
+
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+      background: linear-gradient(to bottom, #e0eafc, #cfdef3);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .dark-mode {
+      background-color: #001f4d; /* Navy blue */
+      color: #ffffff;
+    }
+
+    .dark-mode .navbar {
+      background-color: #001f4d;
+      box-shadow: none;
+    }
+
+    .dark-mode footer {
+      background-color: #001f4d;
+      color: #ffffff;
+    }
+
+    .dark-mode footer a {
+      color: #ffffff;
+    }
+
+    .card {
+      border: none;
+      border-radius: 16px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background-color: #fff;
+      color: #000;
+    }
+
+    .dark-mode .card {
+      background-color: #003366; /* Darker navy */
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar {
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .hero {
+      height: 60vh;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+    }
+
+    .hero-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      z-index: 0;
+    }
+
+    .hero-slide.active {
+      opacity: 1;
+      z-index: 1;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 2;
+    }
+
+    .hero h1 {
+      position: relative;
+      z-index: 3;
+      font-size: 3rem;
+    }
+
+    .hero-caption {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      color: #fff;
+      font-weight: 600;
+      z-index: 3;
+    }
+
+    .search-bar {
+      max-width: 400px;
+    }
+
+    footer {
+      padding: 2rem 0;
+      background-color: #f8f9fa;
+      text-align: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    footer a {
+      margin: 0 10px;
+      color: inherit;
+      text-decoration: none;
+      font-size: 1.5rem;
+      transition: color 0.3s;
+    }
+
+    footer a:hover {
+      color: #007bff;
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      user-select: none;
+      font-size: 1.5rem;
+      color: #000;
+      transition: color 0.3s;
+    }
+
+    .dark-mode .theme-toggle {
+      color: #fff;
+    }
+
+    /* Search input styling for dark mode */
+    .dark-mode .form-control {
+      background-color: #003366;
+      color: #fff;
+      border-color: #00509e;
+    }
+
+    .dark-mode .form-control::placeholder {
+      color: #c0c0c0;
+    }
+
+    .dark-mode .btn-outline-primary {
+      color: #c0d6ff;
+      border-color: #c0d6ff;
+    }
+
+    .dark-mode .btn-outline-primary:hover {
+      background-color: #c0d6ff;
+      color: #001f4d;
+    }
+
+    /* Language select */
+    .form-select {
+      max-width: 120px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .dark-mode .form-select {
+      background-color: #003366;
+      color: #fff;
+      border-color: #00509e;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white px-4">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="#">Travel Blog</a>
+      <form class="d-flex ms-auto me-3 search-bar" onsubmit="event.preventDefault();">
+        <input
+          id="searchInput"
+          class="form-control me-2"
+          type="search"
+          placeholder="Search..."
+          aria-label="Search"
+        />
+        <button class="btn btn-outline-primary" type="submit">Search</button>
+      </form>
+      <select id="languageSelect" class="form-select w-auto me-3">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+      </select>
+      <span class="theme-toggle me-3" onclick="toggleTheme()">🌓</span>
+    </div>
+  </nav>
+
+  <!-- Hero Slideshow -->
+  <div class="hero">
+    <div
+      class="hero-slide active"
+      style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&h=1080&q=80');"
+    >
+      <div class="hero-caption">Tropical Beaches of Thailand</div>
+    </div>
+    <div
+      class="hero-slide"
+      style="background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&h=1080&q=80');"
+    >
+      <div class="hero-caption">Aurora Over Iceland</div>
+    </div>
+    <div
+      class="hero-slide"
+      style="background-image: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1920&h=1080&q=80');"
+    >
+      <div class="hero-caption">Neon Lights of Tokyo</div>
+    </div>
+    <h1 id="heroTitle">Explore the World Through Stories</h1>
+  </div>
+
+  <!-- Blog Cards -->
+  <div class="container my-5">
+    <div class="row g-4" id="blog-cards"></div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>Contact us: travelblog@example.com | Phone: +123 456 7890</p>
+    <div>
+      <a href="https://instagram.com" target="_blank" aria-label="Instagram" rel="noopener noreferrer"
+        ><i class="fab fa-instagram"></i
+      ></a>
+      <a href="https://twitter.com" target="_blank" aria-label="Twitter" rel="noopener noreferrer"
+        ><i class="fab fa-twitter"></i
+      ></a>
+      <a href="https://facebook.com" target="_blank" aria-label="Facebook" rel="noopener noreferrer"
+        ><i class="fab fa-facebook"></i
+      ></a>
+      <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn" rel="noopener noreferrer"
+        ><i class="fab fa-linkedin"></i
+      ></a>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Theme toggle with persistent localStorage
+    function toggleTheme() {
+      document.body.classList.toggle("dark-mode");
+      localStorage.setItem("theme", document.body.classList.contains("dark-mode") ? "dark" : "light");
+    }
+
+    window.onload = () => {
+      if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+      }
+      renderCards();
+      startSlideShow();
+
+      // Add search event listener
+      document.getElementById("searchInput").addEventListener("input", filterCards);
+    };
+
+    // Slideshow
+    let currentSlide = 0;
+    let slides;
+
+    function startSlideShow() {
+      slides = document.querySelectorAll(".hero-slide");
+      setInterval(() => {
+        slides[currentSlide].classList.remove("active");
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add("active");
+      }, 5000);
+    }
+
+    // Multilingual support for hero title
+    const translations = {
+      en: "Explore the World Through Stories",
+      es: "Explora el mundo a través de historias",
+      fr: "Explorez le monde à travers des histoires",
+    };
+    document.getElementById("languageSelect").addEventListener("change", function () {
+      const lang = this.value;
+      document.getElementById("heroTitle").innerText = translations[lang];
+    });
+
+    // Image URLs fixed for all destinations, including Tokyo
+    const imageUrls = {
+      Paris:
+        "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=400&h=300&q=80",
+      Tokyo:
+        "https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=400&h=300&q=80",
+      Iceland:
+        "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&h=300&q=80",
+      Thailand:
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&h=300&q=80",
+      Alps:
+        "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=400&h=300&q=80",
+      Safari:
+        "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=400&h=300&q=80",
+      Greece:
+        "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=400&h=300&q=80",
+      Dubai:
+        "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=400&h=300&q=80",
+      Bali:
+        "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?auto=format&fit=crop&w=400&h=300&q=80",
+      London:
+        "https://images.unsplash.com/photo-1505678261036-a3fcc5e884ee?auto=format&fit=crop&w=400&h=300&q=80",
+    };
+
+    // Store card data globally for filtering
+    const cardData = [];
+
+    // Render 50 cards with proper images
+    const destinations = Object.keys(imageUrls);
+    function renderCards() {
+      const blogCards = document.getElementById("blog-cards");
+      cardData.length = 0; // Clear previous data if any
+      let output = "";
+      for (let i = 1; i <= 50; i++) {
+        const title = destinations[i % destinations.length];
+        const cardTitle = `${title} Adventure #${i}`;
+        cardData.push({ title: cardTitle, destination: title });
+        output += `
+          <div class="col-md-4" data-title="${cardTitle.toLowerCase()}">
+            <div class="card h-100">
+              <img src="${imageUrls[title]}" class="card-img-top" alt="${title}" loading="lazy" />
+              <div class="card-body">
+                <h5 class="card-title fw-bold">${cardTitle}</h5>
+                <p class="card-text">Discover the charm of ${title} in our latest travel story.</p>
+                <a href="#" class="btn btn-primary">Read More</a>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      blogCards.innerHTML = output;
+    }
+
+    // Filter cards based on search input
+    function filterCards() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const cards = document.querySelectorAll("#blog-cards > div.col-md-4");
+      cards.forEach((card) => {
+        const title = card.getAttribute("data-title");
+        if (title.includes(query)) {
+          card.style.display = "";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>
